@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --eleteroSzin: red;
+    --fegyverSzin: sienna;
+    --sebzesSzin: green;
+    --hatterSzin: #232323;
+    --foBetuSzin: wheat;
+    --tamadGombSzin: darkblue;
+    --tamadGombHatter: yellowgreen;
+}
+
+html, body {
+    background-color: var(--hatterSzin);
+    color: var(--foBetuSzin);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.start-container, .valaszto-container {
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+}
+
+.megjelenit {
+    display: flex;
+    gap: 1rem;
+    min-height: 390px;
+}
+
+.tamado-megjelenito, .vedo-megjelenito {
+    flex: 50%;
+}
+
+.tamad, .start {
+    background-color: var(--tamadGombHatter);
+    border: transparent;
+    color: var(--tamadGombSzin);
+    font-weight: bold;
+    width: 6rem;
+    height: 2rem;
+    border-radius: .35rem;
+}
+
+.akcio {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.tamad:hover, .start:hover {
+    box-shadow: 0 0 .5rem white;
+    cursor: pointer;
+}
+
+.tamad:active, .start.active {
+    transform: scale(.95);
+}
+
+.eletero-szin {
+    color: var(--eleteroSzin);
+}
+
+.fegyver-szin {
+    color: var(--fegyverSzin);
+}
+
+.sebzes-szin {
+    color: var(--sebzesSzin);
+}
+
+.gomb-elrejt {
+    display: none;
+}
