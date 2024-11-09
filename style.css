@@ -74,3 +74,8 @@ html, body {
 .gomb-elrejt {
     display: none;
 }
+
+.leny-kep {
+    width: 100%;
+    /* height: 100%; */
+}
