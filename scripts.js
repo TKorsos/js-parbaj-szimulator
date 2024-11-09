@@ -146,6 +146,14 @@ let vedoVeletlenSebzes = () => {
     return induloAlapok.ellenfelSebzes;
 }
 
+let jatekosSebzesFelirat = () => {
+    return `${induloAlapok.darabszam * (induloAlapok.jatekosSablon.sebzesKiirasAlso)}-${induloAlapok.darabszam * (induloAlapok.jatekosSablon.sebzesKiirasFelso)}`;
+}
+
+let ellenfelSebzesFelirat = () => {
+    return `${induloAlapok.ellenfelDarabszam * (induloAlapok.ellensegSablon.sebzesKiirasAlso)}-${induloAlapok.ellenfelDarabszam * (induloAlapok.ellensegSablon.sebzesKiirasFelso)}`;
+}
+
 let veletlenTamadasTortenet = () => {
     induloAlapok.tamadoTortenet = induloAlapok.jatekosSablon.ellensegNev + ' ' + induloAlapok.vedesTortenet[Math.floor(Math.random() * induloAlapok.vedesTortenet.length)];
 
@@ -170,15 +178,22 @@ let sebzesTortenet = (talalat, talalatSzazalek, kezdes, ellenseg, sebzes) => {
 function jatekBeallitasok() {
     induloAlapok.darabszam = Number(document.querySelector(".js-jatekos-darabszam").value);
     induloAlapok.ellenfelDarabszam = Number(document.querySelector(".js-ellenfel-darabszam").value);
+
     induloAlapok.jatekosSablon = ellensegek[Number(document.querySelector(".js-fegyver").value)];
     induloAlapok.jatekosEletero = ellensegek[Number(document.querySelector(".js-fegyver").value)].eletero;
     induloAlapok.ellensegSablon = ellensegek[Number(document.querySelector(".js-ellenfel").value)];
+
     jatekIndit.classList.add("gomb-elrejt");
     kezdesMegjelenito.classList.add("gomb-elrejt");
-    induloAlapok.jatekosEletero = induloAlapok.darabszam * induloAlapok.jatekosEletero;
-    induloAlapok.ellensegSablon.eletero = induloAlapok.ellenfelDarabszam * induloAlapok.ellensegSablon.eletero;
+
     induloAlapok.jatekosLenyAlapEletero = ellensegek[Number(document.querySelector(".js-fegyver").value)].alapEletero;
     induloAlapok.ellenfelLenyAlapEletero = ellensegek[Number(document.querySelector(".js-ellenfel").value)];
+    induloAlapok.jatekosEletero = induloAlapok.darabszam * induloAlapok.jatekosEletero;
+    induloAlapok.ellensegSablon.eletero = induloAlapok.ellenfelDarabszam * induloAlapok.ellensegSablon.eletero;
+
+    induloAlapok.jatekosSebzesKiiras = `${induloAlapok.darabszam * (ellensegek[Number(document.querySelector(".js-fegyver").value)].sebzesKiirasAlso)}-${induloAlapok.darabszam * (ellensegek[Number(document.querySelector(".js-fegyver").value)].sebzesKiirasFelso)}`;
+    induloAlapok.ellenfelSebzesKiiras = `${induloAlapok.ellenfelDarabszam * (ellensegek[Number(document.querySelector(".js-ellenfel").value)].sebzesKiirasAlso)}-${induloAlapok.ellenfelDarabszam * (ellensegek[Number(document.querySelector(".js-ellenfel").value)].sebzesKiirasFelso)}`;
+    
 
     render();
 }
@@ -186,6 +201,10 @@ function jatekBeallitasok() {
 function sebzesGomb() {
     induloAlapok.darabszam = Math.ceil(induloAlapok.jatekosEletero / induloAlapok.jatekosLenyAlapEletero);
     induloAlapok.ellenfelDarabszam = Math.ceil(induloAlapok.ellensegSablon.eletero / induloAlapok.ellenfelLenyAlapEletero.alapEletero);
+
+    induloAlapok.jatekosSebzesKiiras = jatekosSebzesFelirat();
+    induloAlapok.ellenfelSebzesKiiras = ellenfelSebzesFelirat();
+
     induloAlapok.jatekosEletero -= vedoVeletlenSebzes();
     induloAlapok.ellensegSablon.eletero -= tamadoVeletlenSebzes();
     veletlenTamadasTortenet();
