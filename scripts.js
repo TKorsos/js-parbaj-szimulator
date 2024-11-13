@@ -118,8 +118,7 @@ let induloAlapok = {
     kezdes: false,
     tamadoTortenet: '',
     vedoTortenet: '',
-    tamadasTortenet: ["balról suhint és eltalálja.", "jobbról suhint és eltalálja.", "egy hírtelen mozdulattal felülről lecsap és eltalálja.", "egy hírtelen mozdulattal előreszúr és eltalálja."],
-    vedesTortenet: ["balról suhint és eltalálja.", "jobbról suhint és eltalálja.", "egy hírtelen mozdulattal előreszúr és eltalálja."],
+    maganhangzok: ["A", "Á", "E", "É", "I", "Í", "O", "Ó", "Ö", "Ő", "U", "Ú", "Ü", "Ű"],
 }
 
 let tamadoVeletlenSebzes = () => {
@@ -154,24 +153,27 @@ let ellenfelSebzesFelirat = () => {
     return `${induloAlapok.ellenfelDarabszam * (induloAlapok.ellensegSablon.sebzesKiirasAlso)}-${induloAlapok.ellenfelDarabszam * (induloAlapok.ellensegSablon.sebzesKiirasFelso)}`;
 }
 
-let veletlenTamadasTortenet = () => {
-    induloAlapok.tamadoTortenet = induloAlapok.jatekosSablon.ellensegNev + ' ' + induloAlapok.vedesTortenet[Math.floor(Math.random() * induloAlapok.vedesTortenet.length)];
-
-    return induloAlapok.tamadoTortenet;
-}
-
-let veletlenVedesTortenet = () => {
-    induloAlapok.vedoTortenet = induloAlapok.ellensegSablon.ellensegNev + ' ' + induloAlapok.tamadasTortenet[Math.floor(Math.random() * induloAlapok.tamadasTortenet.length)];
-
-    return induloAlapok.vedoTortenet;
-}
-
 let sebzesTortenet = (talalat, talalatSzazalek, kezdes, ellenseg, sebzes) => {
     if(talalat < talalatSzazalek && kezdes === false) {
         return "A párbaj hamarosan elkezdődik.";
     }
     else {
-        return 'A(z) '+ellenseg+' által okozott sebzés: <span class="sebzes-szin">'+sebzes+'</span> pont';
+        if(induloAlapok.maganhangzok.includes(ellenseg.charAt(0))) {
+            if(sebzes === 0) {
+                return 'Az '+ellenseg+' nem találta el ellenfelét.';
+            }
+            else {
+                return 'Az '+ellenseg+' által okozott sebzés: <span class="sebzes-szin">'+sebzes+'</span> pont.';
+            }
+        }
+        else {
+            if(sebzes === 0) {
+                return 'A '+ellenseg+' nem találta el ellenfelét.';
+            }
+            else {
+                return 'A '+ellenseg+' által okozott sebzés: <span class="sebzes-szin">'+sebzes+'</span> pont.';
+            }
+        }
     }
 }
 
@@ -207,8 +209,6 @@ function sebzesGomb() {
 
     induloAlapok.jatekosEletero -= vedoVeletlenSebzes();
     induloAlapok.ellensegSablon.eletero -= tamadoVeletlenSebzes();
-    veletlenTamadasTortenet();
-    veletlenVedesTortenet();
     induloAlapok.kezdes = true;
 
     render();
@@ -231,7 +231,7 @@ function valasztoMegjelenito() {
     return html;
 }
 
-function megjelenitoSablon(nev, kep, oldalClass, eletero, fegyvernev, sebzesHatar, talalat, talalatSzazalek, tortenet, sebzes) {
+function megjelenitoSablon(nev, kep, oldalClass, eletero, fegyvernev, sebzesHatar, sebzes) {
     return `
         <div class="${oldalClass}-megjelenito">
             <h1>${nev}</h1>
@@ -239,7 +239,6 @@ function megjelenitoSablon(nev, kep, oldalClass, eletero, fegyvernev, sebzesHata
             <h3 class="${oldalClass}-eletero">${ eletero > 0 ? 'Életerő: <span class="eletero-szin">'+ eletero +'</span> pont' : 'A '+nev+' meghalt!' }</h3>
             <h3>Fegyver: <span class="fegyver-szin">${fegyvernev}</span></h3>
             <h3>Sebzés: <span class="sebzes-szin">${sebzesHatar}</span> életerőpont</h3>
-            <h4>${ talalat < talalatSzazalek && induloAlapok.kezdes ? 'A(z) '+nev+'nak sikerült kitérnie így nem tudta megsebezni.' : tortenet}</h4>
             <h4>${ sebzes }</h4>
         </div>
     `;
@@ -249,9 +248,9 @@ function render() {
     kezdesMegjelenito.classList.contains("gomb-elrejt") === false ? kivalasztoMegjelenito.innerHTML = valasztoMegjelenito() : kivalasztoMegjelenito.innerHTML = '';
 
     if(jatekIndit.classList.contains("gomb-elrejt") === true) {
-        megjelenito.innerHTML = megjelenitoSablon(induloAlapok.jatekosSablon.ellensegNev, induloAlapok.jatekosSablon.lenyKep, "tamado", induloAlapok.jatekosEletero, induloAlapok.jatekosSablon.ellensegFegyverNev, induloAlapok.jatekosSebzesKiiras, induloAlapok.vedoTalalat, induloAlapok.vedoTalalatSzazalek, induloAlapok.vedoTortenet, sebzesTortenet(induloAlapok.vedoTalalat, induloAlapok.vedoTalalatSzazalek, induloAlapok.kezdes, induloAlapok.ellensegSablon.ellensegNev, induloAlapok.ellenfelSebzes));
+        megjelenito.innerHTML = megjelenitoSablon(induloAlapok.jatekosSablon.ellensegNev, induloAlapok.jatekosSablon.lenyKep, "tamado", induloAlapok.jatekosEletero, induloAlapok.jatekosSablon.ellensegFegyverNev, induloAlapok.jatekosSebzesKiiras, sebzesTortenet(induloAlapok.vedoTalalat, induloAlapok.vedoTalalatSzazalek, induloAlapok.kezdes, induloAlapok.ellensegSablon.ellensegNev, induloAlapok.ellenfelSebzes));
 
-        megjelenito.innerHTML += megjelenitoSablon(induloAlapok.ellensegSablon.ellensegNev, induloAlapok.ellensegSablon.lenyKep, "vedo", induloAlapok.ellensegSablon.eletero, induloAlapok.ellensegSablon.ellensegFegyverNev, induloAlapok.ellenfelSebzesKiiras, induloAlapok.talalat, induloAlapok.tamadoTalalatSzazalek, induloAlapok.tamadoTortenet, sebzesTortenet(induloAlapok.talalat, induloAlapok.tamadoTalalatSzazalek, induloAlapok.kezdes, induloAlapok.jatekosSablon.ellensegNev, induloAlapok.sebzes));
+        megjelenito.innerHTML += megjelenitoSablon(induloAlapok.ellensegSablon.ellensegNev, induloAlapok.ellensegSablon.lenyKep, "vedo", induloAlapok.ellensegSablon.eletero, induloAlapok.ellensegSablon.ellensegFegyverNev, induloAlapok.ellenfelSebzesKiiras, sebzesTortenet(induloAlapok.talalat, induloAlapok.tamadoTalalatSzazalek, induloAlapok.kezdes, induloAlapok.jatekosSablon.ellensegNev, induloAlapok.sebzes));
     }
 
     induloAlapok.ellensegSablon.eletero <= 0 || induloAlapok.jatekosEletero <= 0 || jatekIndit.classList.contains("gomb-elrejt") === false ? tamadasGomb.classList.add("gomb-elrejt") : tamadasGomb.classList.remove("gomb-elrejt");
